@@ -1,14 +1,21 @@
 <script lang="ts">
+import Rodape from "./Rodape.vue"
+import MostrarReceitas from "./MostrarReceitas.vue";
 import SelecionarIngredientes from "./SelecionarIngredientes.vue";
 import SuaLista from "./SuaLista.vue";
 import Tag from "./Tag.vue";
+import BotaoPrincipal from "./BotaoPrincipal.vue";
+
+ 
+type Pagina = 'SelecionarIngredientes' | 'MostrarReceitas';
 export default {
   data(vm) {
     return {
       ingredientes: [] as string[],
+      conteudo: 'SelecionarIngredientes' as Pagina
     };
   },
-  components: { SelecionarIngredientes, Tag, SuaLista },
+  components: { SelecionarIngredientes, Tag, SuaLista , Rodape ,MostrarReceitas,BotaoPrincipal},
   methods: {
     adicionarIngredientes(ingredientes: string) {
       this.ingredientes.push(ingredientes);
@@ -18,6 +25,9 @@ export default {
         (iLista) => ingrediente !== iLista
       );
     },
+    navegar(pagina:Pagina){
+      this.conteudo = pagina;
+    }
   },
 };
 </script>
@@ -27,10 +37,14 @@ export default {
     <section>
       <SuaLista :ingredientes="ingredientes" />
     </section>
-    <SelecionarIngredientes
+    <SelecionarIngredientes v-if="conteudo === 'SelecionarIngredientes'"
       @adicionar-ingrediente="adicionarIngredientes"
-      @remover-ingrediente="removerIngrediente"
+      @remover-ingrediente="removerIngrediente" 
+      @buscar-receitas="navegar('MostrarReceitas')"
     />
+    <MostrarReceitas
+    v-else-if="conteudo == 'MostrarReceitas'"/>
+    <Rodape/>
   </main>
 </template>
 
